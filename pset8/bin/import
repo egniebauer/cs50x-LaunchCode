@@ -1,0 +1,106 @@
+#!/usr/bin/env php
+
+<?php
+// ./import /path/to/US.txt
+
+    // TODO
+    // require_once(__DIR__."../../config.json");
+    require(__DIR__."../../includes/config.php");
+
+    // var_dump($argv);
+    
+    // Source file
+    $source_file = $argv[1];
+    
+    // Verify $source_file
+    if (sizeof($argv) < 2) {
+        exit("Path to file must be provided as a command line argument.\n");
+    }
+    else {
+        
+        // Validate path exists
+        if (!file_exists($source_file) || !is_file($source_file)) {
+            exit("{$source_file} does not exist.\n");
+        }
+        else {
+            
+            // Validate path is readable
+            if (!is_readable($source_file)) {
+                exit("{$source_file} is unreadble.\n");
+            }
+            // else {
+                
+            //     // comment
+            //     echo "{$source_file} exists and is readable.\n";
+            // }
+        }
+    }
+    
+    // Iterate over file's lines
+    $row = 1;
+    
+    if (($handle = fopen($source_file, "r")) !== FALSE) {
+        
+        echo "\033[35;5mUpdating database...\033[0m\t\n";
+        
+        while (! feof($handle) ) {
+            
+            while (($data = fgetcsv($handle, 0, "\t")) !== FALSE) {
+            
+            $country_code = addslashes($data[0]);
+            $postal_code = addslashes($data[1]);
+            $place_name = addslashes($data[2]);
+            $admin_name1 = addslashes($data[3]);
+            $admin_code1 = addslashes($data[4]);
+            $admin_name2 = addslashes($data[5]);
+            $admin_code2 = addslashes($data[6]);
+            $admin_name3 = addslashes($data[7]);
+            $admin_code3 = addslashes($data[8]);
+            $latitude = addslashes($data[9]);
+            $longitude = addslashes($data[10]);
+            $accuracy = addslashes($data[11]);
+            
+
+            $import_sql = "
+                INSERT INTO places (
+                    country_code, 
+                    postal_code, 
+                    place_name, 
+                    admin_name1, 
+                    admin_code1, 
+                    admin_name2, 
+                    admin_code2, 
+                    admin_name3, 
+                    admin_code3, 
+                    latitude, 
+                    longitude, 
+                    accuracy) 
+                VALUES (
+                    '{$country_code}',
+                    {$postal_code},
+                    '{$place_name}',
+                    '{$admin_name1}',
+                    '{$admin_code1}',
+                    '{$admin_name2}',
+                    '{$admin_code2}',
+                    '{$admin_name3}',
+                    '{$admin_code3}',
+                    {$latitude},
+                    {$longitude},
+                    {$accuracy})";
+            
+            CS50::query($import_sql);
+            $row++;
+            
+        }
+        echo "\n{$row} row(s) inserted.\n";
+        
+        }
+        
+        fclose($handle);
+    }
+    else {
+        exit("[ERROR] {$source_file} failed to open.");
+    }
+
+?>

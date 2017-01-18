@@ -1,0 +1,18 @@
+
+.input-invalid {
+    border-color: red;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.feedback-error {
+    color: red;
+}
+
+.container-field {
+    margin-bottom: 6px;
+    /*border-color: purple;*/
+    /*border-width: 1px;*/
+    /*border-style: solid;*/
+    /*color: #00ffcc;*/
+}

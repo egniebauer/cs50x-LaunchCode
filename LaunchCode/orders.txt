@@ -1,0 +1,5 @@
+Soda
+Cheeseburger
+Fries
+Invalid selection.
+
